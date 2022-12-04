@@ -126,7 +126,7 @@ window.exports = {
                     if (openid && url) {
                         const file = convertBase64UrlToBlob(payload);
                         const form = new FormData();
-                        form.append('file', file, `image.png`);
+                        form.append('file', file, `image.${payload.split(";")[0].slice(11)}`);
                         fetch(`${url}/api/resource?openId=${openid}`, {
                             method: 'POST',
                             body: form,

@@ -13,7 +13,7 @@ window.exports = {
     "post": {
         mode: "none",
         args: {
-            enter: (action) => {
+            enter: () => {
                 window.utools.hideMainWindow()
                 const openid = utools.dbStorage.getItem("memos_openid");
                 const url = utools.dbStorage.getItem("memos_url");
@@ -100,7 +100,7 @@ window.exports = {
         args: {
             enter: (action) => {
                 window.utools.hideMainWindow()
-                const {code, type, payload} = action;
+                const {type, payload} = action;
                 if (type === "over") {
                     try {
                         let content = utools.dbStorage.getItem("memos_content");
@@ -220,7 +220,7 @@ window.exports = {
     "clear": {
         mode: "none",
         args: {
-            enter: (action) => {
+            enter: () => {
                 window.utools.hideMainWindow()
                 try {
                     utools.dbStorage.removeItem("memos_content");
@@ -238,12 +238,12 @@ window.exports = {
         args: {
             enter: (action) => {
                 window.utools.hideMainWindow()
-                const payload = action.payload;
+                const openapi = action.payload;
                 try {
-                    const [url, openid] = payload.split("/api/memo?openId=");
+                    const [url, openid] = openapi.split("/api/memo?openId=");
                     utools.dbStorage.setItem("memos_openid", openid);
                     utools.dbStorage.setItem("memos_url", url);
-                    alert(`设置 OpenAPI 成功! (${payload})`);
+                    alert(`设置 OpenAPI 成功! (${openapi})`);
                 } catch (err) {
                     alert(`设置 OpenAPI 失败! message: ${err}`);
                 }

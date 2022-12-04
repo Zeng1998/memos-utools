@@ -36,6 +36,10 @@
           "type": "files",
           "label": "添加资源",
           "fileType": "file"
+        },
+        {
+          "type": "img",
+          "label": "添加图片"
         }
       ]
     },

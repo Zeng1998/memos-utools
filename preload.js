@@ -1,5 +1,14 @@
 const fs = require("fs");
 
+function convertBase64UrlToBlob(dataUrl) {
+    const bytes = window.atob(dataUrl.split(',')[1]);
+    const ab = new Uint8Array(bytes.length);
+    for (let i = 0; i < bytes.length; i++) {
+        ab[i] = bytes.charCodeAt(i);
+    }
+    return new Blob([ab], {type: "image/png"});
+}
+
 window.exports = {
     "post": {
         mode: "none",
@@ -52,7 +61,7 @@ window.exports = {
         args: {
             enter: (action) => {
                 window.utools.hideMainWindow()
-                const {code, type, payload} = action;
+                const payload = action.payload;
                 const openid = utools.dbStorage.getItem("memos_openid");
                 const url = utools.dbStorage.getItem("memos_url");
                 if (openid && url) {
@@ -102,8 +111,51 @@ window.exports = {
                         }
                         utools.dbStorage.setItem("memos_content", content);
                         alert("添加文本成功!");
+                        window.utools.outPlugin();
                     } catch (err) {
                         alert(`添加文本失败! message: ${err}`);
+                        window.utools.outPlugin();
+                    }
+                } else if (type === "img") {
+                    let resourceIdList = utools.dbStorage.getItem("memos_resource_id_list");
+                    if (!resourceIdList) {
+                        resourceIdList = [];
+                    }
+                    const openid = utools.dbStorage.getItem("memos_openid");
+                    const url = utools.dbStorage.getItem("memos_url");
+                    if (openid && url) {
+                        const file = convertBase64UrlToBlob(payload);
+                        const form = new FormData();
+                        form.append('file', file, `image.png`);
+                        fetch(`${url}/api/resource?openId=${openid}`, {
+                            method: 'POST',
+                            body: form,
+                        })
+                            .then(resp => resp.json())
+                            .then(data => {
+                                if (data.data) {
+                                    resourceIdList.push(data.data.id)
+                                } else {
+                                    alert(`上传失败! error: ${JSON.stringify(data)}`);
+                                    window.utools.outPlugin();
+                                }
+                            })
+                            .then(() => {
+                                try {
+                                    utools.dbStorage.setItem("memos_resource_id_list", resourceIdList);
+                                    alert(`添加资源成功! resourceIdList: ${JSON.stringify(resourceIdList)}`);
+                                } catch (err) {
+                                    alert(`添加资源失败! message: ${err}`);
+                                    window.utools.outPlugin();
+                                }
+                            })
+                            .catch(err => {
+                                alert(`上传失败! error: ${err}`);
+                                window.utools.outPlugin();
+                            });
+                    } else {
+                        alert("内部错误!");
+                        window.utools.outPlugin();
                     }
                 } else if (type === "files") {
                     let resourceIdList = utools.dbStorage.getItem("memos_resource_id_list");
@@ -133,7 +185,7 @@ window.exports = {
                                     if (dt.data) {
                                         resourceIdList.push(dt.data.id)
                                     } else {
-                                        alert(`上传失败! error: ${JSON.stringify(data)}`);
+                                        alert(`上传失败! error: ${JSON.stringify(dt)}`);
                                         window.utools.outPlugin();
                                     }
                                 }))
@@ -141,8 +193,10 @@ window.exports = {
                                         try {
                                             utools.dbStorage.setItem("memos_resource_id_list", resourceIdList);
                                             alert(`添加资源成功! resourceIdList: ${JSON.stringify(resourceIdList)}`);
+                                            window.utools.outPlugin();
                                         } catch (err) {
                                             alert(`添加资源失败! message: ${err}`);
+                                            window.utools.outPlugin();
                                         }
                                     });
 
@@ -154,11 +208,12 @@ window.exports = {
 
                     } else {
                         alert("内部错误!");
+                        window.utools.outPlugin();
                     }
                 } else {
                     alert("内部错误!");
+                    window.utools.outPlugin();
                 }
-                window.utools.outPlugin()
             }
         }
     },
@@ -183,7 +238,7 @@ window.exports = {
         args: {
             enter: (action) => {
                 window.utools.hideMainWindow()
-                const {code, type, payload} = action;
+                const payload = action.payload;
                 try {
                     const [url, openid] = payload.split("/api/memo?openId=");
                     utools.dbStorage.setItem("memos_openid", openid);
@@ -195,5 +250,5 @@ window.exports = {
                 window.utools.outPlugin()
             },
         }
-    },
+    }
 }

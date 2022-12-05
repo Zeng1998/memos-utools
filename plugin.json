@@ -6,22 +6,10 @@
       "code": "post",
       "explain": "发布暂存区内容",
       "cmds": [
-        {
-          "type": "over",
-          "label": "发布暂存区内容",
-          "minLength": 1
-        }
-      ]
-    },
-    {
-      "code": "direct",
-      "explain": "发布剪切板内容",
-      "cmds": [
-        {
-          "type": "over",
-          "label": "发布剪切板内容",
-          "minLength": 1
-        }
+        "Post",
+        "发布",
+        "发送",
+        "Memos"
       ]
     },
     {
@@ -47,10 +35,8 @@
       "code": "clear",
       "explain": "清空暂存区",
       "cmds": [
-        {
-          "type": "over",
-          "label": "清空暂存区"
-        }
+        "Clear",
+        "清空"
       ]
     },
     {
@@ -58,8 +44,9 @@
       "explain": "设置OpenAPI",
       "cmds": [
         {
-          "type": "over",
-          "label": "设置OpenAPI"
+          "type": "regex",
+          "label": "设置OpenAPI",
+          "match": "/.*/api/memo\\?openId=.*/"
         }
       ]
     }

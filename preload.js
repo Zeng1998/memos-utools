@@ -56,45 +56,6 @@ window.exports = {
             },
         }
     },
-    "direct": {
-        mode: "none",
-        args: {
-            enter: (action) => {
-                window.utools.hideMainWindow()
-                const payload = action.payload;
-                const openid = utools.dbStorage.getItem("memos_openid");
-                const url = utools.dbStorage.getItem("memos_url");
-                if (openid && url) {
-                    fetch(`${url}/api/memo?openId=${openid}`, {
-                        method: 'POST',
-                        headers: {
-                            "Content-Type": " application/json",
-                        },
-                        body: JSON.stringify({
-                            "content": payload,
-                        }),
-                    })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.data) {
-                                alert("发布成功!");
-                                window.utools.outPlugin();
-                            } else {
-                                alert(`发布失败! error: ${JSON.stringify(data)}`);
-                                window.utools.outPlugin();
-                            }
-                        })
-                        .catch(err => {
-                            alert(`发布失败! error: ${err}`);
-                            window.utools.outPlugin();
-                        })
-                } else {
-                    alert("请先设置 OpenID!");
-                    window.utools.outPlugin();
-                }
-            },
-        }
-    },
     "append": {
         mode: "none",
         args: {

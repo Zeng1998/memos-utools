@@ -50,7 +50,7 @@ window.exports = {
                             window.utools.outPlugin();
                         })
                 } else {
-                    alert("请先设置 OpenID!");
+                    alert("请先设置 OpenID! (复制 OpenAPI 并打开 utools)");
                     window.utools.outPlugin();
                 }
             },

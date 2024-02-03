@@ -4,12 +4,16 @@
   "features": [
     {
       "code": "post",
-      "explain": "发布暂存区内容",
+      "explain": "发布暂存区内容/直接发布",
       "cmds": [
         "Post",
         "发布",
         "发送",
-        "Memos"
+        "Memos",
+        {
+          "type": "over",
+          "label": "发布"
+        }
       ]
     },
     {
@@ -24,10 +28,6 @@
           "type": "files",
           "label": "添加资源",
           "fileType": "file"
-        },
-        {
-          "type": "img",
-          "label": "添加图片"
         }
       ]
     },
@@ -40,13 +40,24 @@
       ]
     },
     {
-      "code": "openapi",
-      "explain": "设置OpenAPI",
+      "code": "token",
+      "explain": "设置 Access Token",
       "cmds": [
         {
           "type": "regex",
-          "label": "设置OpenAPI",
-          "match": "/.*/api/memo\\?openId=.*/"
+          "label": "设置 Access Token",
+          "match": "/eyJhbGciOiJIUzI1NiIsImtpZCI6InYxIiwidHlwIjoiSldUIn0\\..*\\..*/"
+        }
+      ]
+    },
+    {
+      "code": "url",
+      "explain": "设置 URL",
+      "cmds": [
+        {
+          "type": "regex",
+          "label": "设置 URL",
+          "match": "/(http|https):\\/\\/([\\w.]+\\/?)\\S*/"
         }
       ]
     }
